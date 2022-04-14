@@ -1,10 +1,6 @@
 package suppliers;
 
-import details.Detail;
+import thread.AbstractFactoryThread;
 
-public abstract class AbstractSupplier {
-    public Detail getDetail() {
-        return null;
-    }
-
+public abstract class AbstractSupplier extends AbstractFactoryThread {
 }
