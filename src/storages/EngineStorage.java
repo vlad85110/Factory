@@ -1,10 +1,25 @@
 package storages;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import products.Product;
+import products.Engine;
+
+import java.util.ArrayList;
 
 public class EngineStorage extends AbstractStorage {
-    public EngineStorage(int size) {
+    private final ArrayList<Engine> details;
+
+    private EngineStorage(int size) {
         super(size);
+        details = new ArrayList<>(size);
     }
 
+    @Override
+    protected void addDetail(Product detail) {
+        details.add((Engine) detail);
+    }
+
+    @Override
+    protected Product getDetail() {
+        return details.get(size.intValue() - 1);
+    }
 }

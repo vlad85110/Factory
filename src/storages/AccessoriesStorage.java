@@ -1,9 +1,25 @@
 package storages;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import products.Accessories;
+import products.Product;
+
+import java.util.ArrayList;
 
 public class AccessoriesStorage extends AbstractStorage {
-    public AccessoriesStorage(int size) {
+    private final ArrayList<Accessories> details;
+
+    private AccessoriesStorage(int size) {
         super(size);
+        details = new ArrayList<>(size);
+    }
+
+    @Override
+    protected void addDetail(Product detail) {
+        details.add((Accessories) detail);
+    }
+
+    @Override
+    protected Product getDetail() {
+        return details.get(size.intValue() - 1);
     }
 }

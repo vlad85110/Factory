@@ -1,12 +1,16 @@
 package suppliers;
 
-import storages.EngineStorage;
+import products.Engine;
 import storages.Storages;
 
 public class EngineSupplier extends AbstractSupplier {
+    public EngineSupplier(String name) {
+        super(name);
+    }
+
     @Override
-    protected void doTask() {
+    protected void createDetail() {
         var storage = Storages.getEngineStorage();
-        storage.add();
+        storage.add(new Engine());
     }
 }

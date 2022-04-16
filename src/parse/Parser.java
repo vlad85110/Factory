@@ -1,6 +1,5 @@
 package parse;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
@@ -11,7 +10,7 @@ public class Parser {
     static {
         FileReader reader;
         try {
-            reader = new FileReader("params.config");
+            reader = new FileReader("src/parse/params.config");
             properties.load(reader);
         } catch (IOException e) {
             e.printStackTrace();
@@ -21,4 +20,5 @@ public class Parser {
     public static int parse(String field) {
         return Integer.parseInt(properties.getProperty(field));
     }
+
 }

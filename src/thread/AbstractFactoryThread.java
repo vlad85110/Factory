@@ -1,33 +1,41 @@
 package thread;
 
+import java.util.concurrent.TimeUnit;
+
 public abstract class AbstractFactoryThread extends Thread {
     protected volatile boolean end = false;
     protected volatile boolean busy = false;
-    protected abstract void doTask();
+
+    public AbstractFactoryThread(String name) {
+        super(name);
+    }
 
     @Override
     public void run() {
         while (!end) {
-            busy = false;
+            busy = true;
 
             try {
-                wait();
+                TimeUnit.MILLISECONDS.sleep(getProcessTime());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (end) break;
 
-            busy = true;
             doTask();
+            busy = false;
         }
     }
+
+    protected abstract void doTask();
+
+    protected abstract long getProcessTime();
 
     public boolean isEnd() {
         return end;
     }
 
-    public void setEnd(boolean end) {
-        this.end = end;
+    public void end() {
+        this.end = true;
     }
 
     public boolean isBusy() {

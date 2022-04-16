@@ -1,12 +1,16 @@
 package suppliers;
 
-import storages.CarBodyStorage;
+import products.CarBody;
 import storages.Storages;
 
 public class CarBodySupplier extends AbstractSupplier {
+    public CarBodySupplier(String name) {
+        super(name);
+    }
+
     @Override
-    protected void doTask() {
+    protected void createDetail() {
         var storage = Storages.getCarBodyStorage();
-        storage.add();
+        storage.add(new CarBody());
     }
 }

@@ -1,11 +1,25 @@
 package storages;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import products.CarBody;
+import products.Product;
+
+import java.util.ArrayList;
 
 public class CarBodyStorage extends AbstractStorage {
-    public CarBodyStorage(int size) {
+    private final ArrayList<CarBody> details;
+
+    private CarBodyStorage(int size) {
         super(size);
+        details = new ArrayList<>(size);
     }
 
+    @Override
+    protected void addDetail(Product detail) {
+        details.add((CarBody) detail);
+    }
 
+    @Override
+    protected Product getDetail() {
+        return details.get(size.intValue() - 1);
+    }
 }
