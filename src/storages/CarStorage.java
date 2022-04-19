@@ -18,38 +18,22 @@ public class CarStorage extends AbstractStorage {
     }
 
     @Override
-    public synchronized void add(Product detail) {
-        while (isFull()) {
-            notify();
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        addDetail(detail);
-        size.incrementAndGet();
-        viewer.updateDetailStorage(size.toString(), this);
-        notifyAll();
-    }
-
-    @Override
     public synchronized Product get() {
         while (isVoid()) {
             controller.notifyController();
-            notify();
+            notifyAdd();
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+
+        System.out.println(Thread.currentThread().getName());
 
         var detail = getDetail();
         size.decrementAndGet();
         viewer.updateDetailStorage(size.toString(), this);
-
         notifyAll();
         return detail;
     }
@@ -63,7 +47,7 @@ public class CarStorage extends AbstractStorage {
 
     @Override
     protected Product getDetail() {
-        return cars.get(size.intValue() - 1);
+        return cars.remove(size.intValue() - 1);
     }
 
     public int getFreePlace() {

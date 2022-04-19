@@ -20,6 +20,6 @@ public class AccessoriesStorage extends AbstractStorage {
 
     @Override
     protected Product getDetail() {
-        return details.get(size.intValue() - 1);
+        return details.remove(size.intValue() - 1);
     }
 }

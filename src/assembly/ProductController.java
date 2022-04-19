@@ -3,13 +3,16 @@ package assembly;
 import parse.FactoryConfig;
 import storages.*;
 
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ProductController extends Thread {
     private static volatile ProductController controller;
     private final ExecutorService pool;
-    private final int size;
+    private final ArrayList<Future<?>> futures;
     private volatile boolean end;
 
     public static ProductController getInstance() {
@@ -27,24 +30,36 @@ public class ProductController extends Thread {
 
     public ProductController(String name) {
         super(name);
-        size = FactoryConfig.workers;
+        int size = FactoryConfig.workers;
         pool = Executors.newFixedThreadPool(size);
+        futures = new ArrayList<>(size);
     }
 
     @Override
-    public synchronized void run() {
+    public void run() {
         CarStorage storage = Storages.getCarStorage();
         while (!end) {
             var count = storage.getFreePlace();
 
             for (int i = 0; i < count; i++) {
-                pool.execute(new Worker());
+               var future = pool.submit(new Worker());
+               futures.add(future);
             }
 
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            for (var i : futures) {
+                try {
+                    i.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            synchronized (this) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -54,6 +69,7 @@ public class ProductController extends Thread {
     }
 
     public void end() {
+        pool.shutdown();
         this.end = true;
     }
 }

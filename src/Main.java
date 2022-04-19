@@ -1,23 +1,20 @@
-import assembly.ProductController;
 import dealers.Dealers;
 import suppliers.CarBodySupplier;
 import suppliers.EngineSupplier;
 import suppliers.accessories.AccessoriesSuppliers;
+import thread.Factory;
+import view.Viewer;
 
 public class Main {
 
     public static void main(String[] args) {
-        AccessoriesSuppliers accessoriesSuppliers = new AccessoriesSuppliers();
-        accessoriesSuppliers.start();
-        CarBodySupplier carBodySupplier = new CarBodySupplier("car body");
-        carBodySupplier.start();
-        EngineSupplier engineSupplier = new EngineSupplier("engine");
-        engineSupplier.start();
+        Factory factory = new Factory(new AccessoriesSuppliers(), new CarBodySupplier("car body"),
+                new EngineSupplier("engine"), new Dealers());
 
-        ProductController controller = ProductController.getInstance();
-        controller.start();
+        factory.start();
 
-        Dealers dealers = new Dealers();
-        dealers.start();
+        var viewer = Viewer.getInstance();
+        viewer.connect(factory);
     }
+
 }

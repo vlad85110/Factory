@@ -1,6 +1,7 @@
 package view;
 
 import storages.*;
+import thread.Factory;
 
 import javax.swing.*;
 
@@ -14,7 +15,6 @@ public class FactoryView extends JFrame implements Viewer {
     private JPanel assembly;
     private JLabel carStorage;
     private JLabel carsTotal;
-    private JLabel waiting;
     private JSlider workerSlider;
     private JSlider suppliersSlider;
     private JPanel dealers;
@@ -34,10 +34,17 @@ public class FactoryView extends JFrame implements Viewer {
         return localInstance;
     }
 
+    @Override
+    public void connect(Factory factory) {
+        var listener = new FrameListener();
+        addWindowListener(listener);
+        listener.setFactory(factory);
+    }
+
     public FactoryView() {
         super("Car factory");
         setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
         setSize(700,300);
         Location.centreWindow(this);
         setContentPane(main);

@@ -1,10 +1,10 @@
 package dealers;
 
 import parse.FactoryConfig;
-import storages.CarStorage;
-import suppliers.accessories.AccessoriesSupplier;
 import thread.AbstractFactoryThread;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Dealers {
@@ -17,9 +17,20 @@ public class Dealers {
     }
 
     public void start() {
+        FileWriter writer = null;
+        try {
+            writer= new FileWriter("src/dealers/log");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         for (int i = 0; i < size; i++) {
-            dealers.add(new Dealer("Dealer-" + i));
+            dealers.add(new Dealer("Dealer-" + i, writer));
         }
         dealers.forEach(AbstractFactoryThread::start);
+    }
+
+    public void end() {
+        dealers.forEach(Dealer::end);
     }
 }

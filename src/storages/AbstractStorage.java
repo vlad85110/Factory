@@ -18,8 +18,8 @@ public abstract class AbstractStorage {
 
     public synchronized void add(Product detail) {
         while (isFull()) {
+            notifyGet();
             try {
-                notify();
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -29,11 +29,12 @@ public abstract class AbstractStorage {
         addDetail(detail);
         size.incrementAndGet();
         viewer.updateDetailStorage(size.toString(), this);
+        notifyGet();
     }
 
     public synchronized Product get() {
         while (isVoid()) {
-            notify();
+            notifyAdd();
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -44,9 +45,16 @@ public abstract class AbstractStorage {
         var detail = getDetail();
         size.decrementAndGet();
         viewer.updateDetailStorage(size.toString(), this);
-
-        notifyAll();
+        notifyAdd();
         return detail;
+    }
+
+    protected void notifyAdd() {
+        notify();
+    }
+
+    protected void notifyGet() {
+        notify();
     }
 
     public boolean isFull() {

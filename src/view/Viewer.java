@@ -1,5 +1,7 @@
 package view;
 
+import thread.Factory;
+
 public interface Viewer {
     static Viewer getInstance() {
         return FactoryView.getInstance();
@@ -10,4 +12,6 @@ public interface Viewer {
     void updateCarStorage(String text);
 
     void updateDealersTotal();
+
+    void connect(Factory factory);
 }
